@@ -1,6 +1,5 @@
-
 ##################################
-###### Time Series Charts ##########
+###### Time Series / Facets #######
 ##################################
 
 
@@ -9,6 +8,9 @@ years2 <- c(2010,2015,2020)
 
 names(years) <- years
 names(years2) <- years2
+geo1 <- "state"
+geo1 <- "cbsa"
+
 survey1 <- "acs1"
 survey1 <- "acs5"
 
@@ -33,7 +35,7 @@ df1_ts <- df1_ts  %>%
   mutate (MVNET75E = MVIN75E- MVOUT75E) %>%
   mutate (MVNET75M = (MVIN75M^2+MVOUT75M^2)^(1/2)) %>%
   mutate(NET_75MV_RATE =NET_MV75E/(POP75PLUS)) %>%
-  mutate(NET_MV_RATE =NET_MVE /TOTPOPE)
+  mutate(NET_MV_RATE =NET_MVE /TOTPOPE) 
 
 
 df1_ts <- df1_ts %>% 
@@ -55,8 +57,10 @@ df1_ts <- df1_ts %>%
   mutate (MVINABROAD60_70E = MVINABROAD60E +MVINABROAD65E) %>%
   mutate (MVINABROAD60_70M = (MVINABROAD60M^2 +MVINABROAD65M^2)^(1/2)) %>%
   mutate (POP75PLUS = (POPM75E+POPM80E+POPM85E+POPF75E+POPF80E+POPF85E)) %>%
-  mutate(MVNET75_RATE =MVNET75E/POP75PLUS) %>%
-  mutate(MVNET_RATE = MVNETE /TOTPOPE)
+  mutate (MVNET75_RATE =MVNET75E/POP75PLUS) %>%
+  mutate (MVNET_RATE = MVNETE /TOTPOPE) %>%
+  mutate (MVNET75_RATEM = MVNET75M/POP75PLUS) %>%
+  mutate (MNNET_RATEM   = MVNETM / TOTPOPE)
 
 
 
@@ -68,20 +72,30 @@ geo2 <- "Ohio"
 geo2 <- "Oregon"
 geo2 <- "Idaho"
 
+geo2 <- "Phoenix-Mesa-Glendale"
 
-
-## Timeseries01 - Net Moves 
+## Timeseries01 - Annual Moves 
 ## with Error Ribbon
 
 age2 <- "75+"
 age2 <- "All Ages"
 title1 <- paste ("Annual Net Domestic Migration ",age2, " | ", geo2, sep="")
+title1 <- paste ("Annual Domestic Move Ins ",age2, " | ", geo2, sep="")
+title1 <- paste ("Annual Domestic Move Outs ",age2, " | ", geo2, sep="")
 caption1 <- "Shaded area represent margin of error around ACS estimate"
 
 
 df1_ts <- df1_ts %>%
-  mutate (estimate = MVNET75E) %>%
-  mutate (moe = MVNET75M)
+  mutate (estimate = NET_MV75E) %>%
+  mutate (moe = NET_MV75M)
+
+df1_ts <- df1_ts %>%
+  mutate (estimate = MVIN75E) %>%
+  mutate (moe = MVIN75M)
+
+df1_ts <- df1_ts %>%
+  mutate (estimate = MVOUT75E) %>%
+  mutate (moe = MVOUT75M)
 
 df1_ts <- df1_ts %>%
   mutate (estimate = MVNETE) %>%
@@ -108,15 +122,16 @@ ggplot(df2_ts, aes(x = year, y = estimate, group = 1)) +
 
 
 
+
 ## Timeseries02 - Ratio of Net Moves 
 ## with Error Ribbon
 
 title1 <- paste ("Annual Net Domestic Migration Rate | ", geo2, sep="")
-caption1 <- "Shaded area represent margin of error around ACS estimate"
+caption1 <- "Shaded area represent 90% margin of error around ACS estimate \n 2020 values not available."
 
 df1_ts <- df1_ts %>%
   mutate (Age_75_Only = MVNET75_RATE) %>%
-  mutate (Total_Population = MVNET_RATE)
+  mutate (Total_Population = MVNET_RATE) 
 
 df2_ts <- df1_ts  %>%
   filter (NAME== geo2)
@@ -124,8 +139,14 @@ df2_ts <- df1_ts  %>%
 colors <- c("Age_75_Only" = "purple", "Total_Population" = "black")
 
 ggplot(df2_ts, aes(x=year, group=1)) +                    
-  geom_line(aes(y=Age_75_Only, color="Age_75_Only"), size=1) +  
+  geom_line(aes(y=Age_75_Only, color="Age_75_Only"), size=1) +
+  geom_ribbon(aes(ymax = Age_75_Only + MVNET75_RATEM, ymin = Age_75_Only - MVNET75_RATEM), 
+              fill = "purple",
+              alpha = 0.3) + 
   geom_line(aes(y=Total_Population, color="Total_Population"), size=1) +
+  geom_ribbon(aes(ymax = Total_Population + MNNET_RATEM, ymin = Total_Population - MNNET_RATEM), 
+              fill = "grey",
+              alpha = 0.6) +  
   geom_point(aes(y=Age_75_Only, color = "Age_75_Only"), size = 2) +
   geom_point(aes(y=Total_Population, color = "Total_Population"), size = 2) +
   theme(legend.position = "bottom") +
@@ -139,4 +160,23 @@ ggplot(df2_ts, aes(x=year, group=1)) +
   scale_color_manual(values = colors)
 
 
+
+
+
+
+write_xlsx((df1_ts %>% select(
+  "NAME",
+  "year",
+  "MVINE",
+  "MVOUTE",
+  "MVIN60_70E",
+  "MVOUT60_70E",
+  "MVIN75E",
+  "MVOUT75E",
+  "MVINABROADE",
+  "MVINABROAD60E",
+  "MVINABROAD65E",
+  "MVINABROAD75E",  
+)),
+"processed_data/df1_ts__.xlsx")
 

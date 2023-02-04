@@ -1,4 +1,3 @@
-
 #################################################
 ############# Plots #############################
 ##############################################
@@ -50,7 +49,7 @@ df1 <- df1 %>%
   mutate(var1 = y1- predict1)
 summary(model)
 
-threshold1 <- 2500  ## applied to variance
+threshold1 <- 1500  ## applied to variance
 ## 1500 for States/75/1YR
 ## 1250 for States/75/5Yr
 ## 3500 for States/60/1Yr
@@ -58,7 +57,7 @@ threshold1 <- 2500  ## applied to variance
 ## 9999 for CBSA/75
 ## 3000 for CBSA/60
 
-threshold2 <- 20000  ## applied to net migration 
+threshold2 <- 3000  ## applied to net migration 
 ## 3000  for States/75/1Yr
 ## 2500  for States/75/5Yr
 ## 15000 for States/60/1Yr
@@ -89,3 +88,6 @@ ggplot(df1, aes(x = x1, y = y1)) +
   scale_x_continuous(labels = comma) + 
   labs(title=title1,subtitle=subtitle2,x=x_label2,  
        y=y_label2, caption=caption1)
+
+
+

@@ -5,8 +5,15 @@
 rm(list=ls())
 
 geo1 <- "state"  ## "state" or "cbsa"
+geo1 <- "cbsa"
+
 survey1 <- "acs1"  ## "acs1" or "acs5"
+survey1 <- "acs5"
+
 year1 <- 2021  ## 2021 for 1-yr, 2019 for state 5-yr (2015-2019), 2020 for 5-yr CBSA data
+year1 <- 2020
+
+
 caption1 <- "Source: ACS Data Tables via the tidycensus R package" 
 
 popvar <-  c(TOTPOP        = "B01001_001",
@@ -56,7 +63,8 @@ mvvar <-  c(MVIN      = "B07001_065",
             MVOUT75   = "B07401_080")
 
 
-mvvari <- c(MVINABROAD40    = "B07001_089",
+mvvari <- c(MVINABROAD      = "B07001_081",
+            MVINABROAD40    = "B07001_089",
             MVINABROAD45    = "B07001_090",
             MVINABROAD50    = "B07001_091",
             MVINABROAD55    = "B07001_092",
@@ -96,7 +104,11 @@ df1 <- df1 %>%
   mutate (MVNETBELOW75 = MVNETE - MVNET75E) %>%
   mutate (MVINABROAD60_70E = MVINABROAD60E +MVINABROAD65E) %>%
   mutate (MVINABROAD60_70M = (MVINABROAD60M^2 +MVINABROAD65M^2)^(1/2)) %>%
-  mutate (POP75PLUS = (POPM75E+POPM80E+POPM85E+POPF75E+POPF80E+POPF85E))
+  mutate (POP75PLUS = (POPM75E+POPM80E+POPM85E+POPF75E+POPF80E+POPF85E)) %>%
+  mutate (TOTMVIN = MVINE + MVINABROADE) %>%
+  mutate (TOT75MVIN = MVIN75E + MVINABROAD75E) %>%
+  mutate (TOT60_70MVIN = MVIN60_70E + MVINABROAD60E+MVINABROAD65E)
+
 
 
 state_outline <- get_acs(
@@ -112,4 +124,23 @@ state_outline <- get_acs(
 state_outline <- state_outline %>% 
   filter(!str_detect(NAME, "Alaska")) %>% 
   filter(!str_detect(NAME, "Puerto Rico")) 
+
+
+
+write_xlsx((df1 %>% select(
+  "NAME",
+  "MVINE",
+  "MVOUTE",
+  "MVIN60_70E",
+  "MVOUT60_70E",
+  "MVIN75E",
+  "MVOUT75E",
+  "MVINABROADE",
+  "MVINABROAD60E",
+  "MVINABROAD65E",
+  "MVINABROAD75E",  
+)),
+"processed_data/df1_.xlsx")
+
+
 

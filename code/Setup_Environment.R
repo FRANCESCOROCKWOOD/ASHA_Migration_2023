@@ -28,11 +28,13 @@ library(ggrepel)
 library(maps)
 install.packages("censusapi")
 library(censusapi)
-
+install.packages("writexl")
+library("writexl")
 
 ##install.packages("devtools")
 ##devtools::install_github("hrecht/censusapi")
-##library(censusapi)
+##libary(scale_colors_economist)
+
 
 
 census_api_key("1852cfa09349d41909bfbf393344c5bf9b29410a", install=TRUE, overwrite = TRUE)
@@ -46,4 +48,8 @@ Sys.getenv("CENSUS_KEY")
 
 
 getwd()
-setwd("C:/Users/FrankRockwood/Desktop/ASHA_Project/WorkingDirectory")
+## setwd("C:/Users/FrankRockwood/Desktop/ASHA_Project/WorkingDirectory")
+## setwd("C:/Users/FrankRockwood/Desktop/ASHA_Migration_2023")
+
+
+
