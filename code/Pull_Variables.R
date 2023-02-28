@@ -10,8 +10,11 @@ geo1 <- "cbsa"
 survey1 <- "acs1"  ## "acs1" or "acs5"
 survey1 <- "acs5"
 
-year1 <- 2021  ## 2021 for 1-yr, 2019 for state 5-yr (2015-2019), 2020 for 5-yr CBSA data
-year1 <- 2020
+
+year1 <- 2019  ## 2019 for state 5-yr (2015-2019)
+year1 <- 2015  ## 2015 for 5-year flow info with AGE break (2011-2015)  
+year1 <- 2020  ## 2020 for 5-yr CBSA data,
+year1 <- 2021  ## 2021 for 1-yr state data  
 
 
 caption1 <- "Source: ACS Data Tables via the tidycensus R package" 
@@ -104,6 +107,8 @@ df1 <- df1 %>%
   mutate (MVNETBELOW75 = MVNETE - MVNET75E) %>%
   mutate (MVINABROAD60_70E = MVINABROAD60E +MVINABROAD65E) %>%
   mutate (MVINABROAD60_70M = (MVINABROAD60M^2 +MVINABROAD65M^2)^(1/2)) %>%
+  mutate (POP75_85 = (POPM75E+POPM80E+POPF75E+POPF80E)) %>%
+  mutate (POP85PLUS = (POPM85E+POPF85E)) %>% 
   mutate (POP75PLUS = (POPM75E+POPM80E+POPM85E+POPF75E+POPF80E+POPF85E)) %>%
   mutate (TOTMVIN = MVINE + MVINABROADE) %>%
   mutate (TOT75MVIN = MVIN75E + MVINABROAD75E) %>%
@@ -127,20 +132,51 @@ state_outline <- state_outline %>%
 
 
 
+## Appendix A (or B) ##
+
 write_xlsx((df1 %>% select(
   "NAME",
-  "MVINE",
-  "MVOUTE",
-  "MVIN60_70E",
-  "MVOUT60_70E",
+  "MVNET75E",
   "MVIN75E",
   "MVOUT75E",
-  "MVINABROADE",
-  "MVINABROAD60E",
-  "MVINABROAD65E",
-  "MVINABROAD75E",  
+  "MVNETE", 
+  "MVINE",
+  "MVOUTE",
 )),
-"processed_data/df1_.xlsx")
+"processed_data/AppxA_.xlsx")
 
 
+## Check by Age Profile ##
+
+write_xlsx((df1 %>% select(
+  "NAME",
+  "TOTPOPE",
+  "POP75_85",
+  "POP85PLUS"
+
+)),
+"processed_data/Check_.xlsx")
+
+
+
+##########################################
+#### Pull Flow Data ######################
+##########################################
+
+
+geo2 <- 35620  ## "New York-Newark-Jersey City, NY-NJ-PA Metro Area"
+
+Flow <-get_flows(
+  geography = "metropolitan statistical area",
+  breakdown = "AGE",
+  msa = geo2,
+  breakdown_labels = TRUE,
+  output = "wide",
+  year = 2015
+) %>%
+  filter (AGE_label== "75 year and over") 
+
+
+
+write_xlsx(Flow, "processed_data/Flow.xlsx")
 

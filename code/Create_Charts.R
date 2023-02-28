@@ -122,3 +122,31 @@ df1chart <- df1 %>%
        caption = caption1) 
 plot(df1chart)
 
+
+## Flow Chart
+## Flow_MovedIn_[geography]_[age]_[survey]
+## Example: "Flow_MovedIn_CBSA_75_2015
+
+
+title1 <- "75+ Persons Moving From NYC Metro"
+subtitle1 <- "2011-2015 5-Year ACS Estimate"
+
+Flow$estimate <- Flow$MOVEDIN
+Flow$moe <- Flow$MOVEDIN_M
+
+df1chart <- Flow %>%
+  slice_max(estimate, n = 20) %>%
+  select(FULL2_NAME, estimate, moe) %>%
+  ggplot(aes(y = reorder(FULL2_NAME, estimate), x = estimate)) + 
+  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe))+
+  geom_point(size=3, color = "darkgreen") +  
+  theme_minimal(base_size = 12) + 
+  scale_x_continuous(labels=comma)+
+  labs(title = title1, 
+       subtitle = subtitle1, 
+       y = "", 
+       x = x_label1, 
+       caption = caption1) 
+plot(df1chart) 
+
+

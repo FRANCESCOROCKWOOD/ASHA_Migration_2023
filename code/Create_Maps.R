@@ -2,9 +2,11 @@
 ###### Maps ###############################
 ###########################################
 
-subtitle1 <- "2021 1-Year ACS Estimates"
-subtitle1 <- "2015-2019 5-Year ACS Estimates"
-subtitle1 <- "2016-2020 5-Year ACS Estimates"
+subtitle1 <- "2021 1-Year ACS Estimates"  ## for states
+subtitle1 <- "2015-2019 5-Year ACS Estimates"  ## for states pre-pandemic
+subtitle1 <- "2016-2020 5-Year ACS Estimates" ## for CBSA
+
+
 
 fill1 <- "ACS Estimate"
 
@@ -36,7 +38,6 @@ ggplot() +
   theme_void()
 
 
-
 ## Maps - Move In / Move Out / Net Moves
 ## Map_[direction]_[geography]_[age]_[survey]
 ##    [direction] | MoveIn, MoveOut, NetMoves
@@ -65,12 +66,18 @@ title1 <- "Net Migration of Persons 75+ by State"
 title1 <- "Net Mitration of Persons Aged 60-70 by State"
 title1 <- "Net Migration of Persons 75+ by CBSA"
 title1 <- "Net Migration of Persons 75+ by CBSA - Excluding NYC Metro"
+
+
 df1$estimate <- df1$MVNET60_70E
 df1$estimate <- df1$MVNET75E
 df1$moe <- df1$MVNET60_70M
 df1$moe <- df1$MVNET75M
 
-limit1 <- max(abs(df1$estimate)) * c(-1, 1)
+limit1 <- max(abs(df1$estimate)) * c(0, 1)  ## for in and out migration figures
+limit1 <- max(abs(df1$estimate)) * c(-1, 1) ## for net figures
+
+## df1 <- df1 %>%
+## filter(estimate >= -4000)
 
 ggplot() +
   geom_sf(data=df1, aes(fill= estimate)) +
@@ -88,24 +95,6 @@ ggplot() +
   theme_void()
 
 
-df2 <- df1 %>%
-  filter(estimate >= -4000)
-
-limit1 <- max(abs(df2$estimate)) * c(-1, 1)
-ggplot() +
-  geom_sf(data=df2, aes(fill= estimate)) +
-  geom_sf(data=state_outline, fill=NA, color="sienna4") +
-  scale_fill_distiller(palette = palette1, 
-                       type="div",
-                       limit = limit1,
-                       direction = 1,
-                       guide = "colourbar",
-                       label = comma) + 
-  labs(title = title1,
-       subtitle = subtitle1,
-       caption = caption1,
-       fill = fill1) + 
-  theme_void()
 
 
 ## Maps - International Move Ins 
