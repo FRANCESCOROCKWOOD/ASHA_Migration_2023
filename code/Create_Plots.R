@@ -27,13 +27,12 @@ subtitle2 <- "75+ v. All Ages | 2015-2019"
 subtitle2 <- "60-70 v. All Ages | 2015-2019"
 subtitle2 <- "60-70 v. All Ages | 2021"
 subtitle2 <- "75+ v. All Ages | 2021"
+subtitle2 <- "45-60 v. All Ages | 2021"
 
 x_label2 <- "All Ages"
+y_label2 <- "Ages 45-60"
 y_label2 <- "Ages 60-70"
 y_label2 <- "Ages 75+"
-
-
-
 
 
 x1 = df1$MVNETE  ## net migration for all ages
@@ -41,13 +40,12 @@ x1 = df1$MVINE   ## in-migratrion for all ages
 x1 = df1$MVOUTE  ## out-migration for all ages
 
 y1 = df1$MVNET60_70E
+y1 = df1$MVNET45_60E
 y1 = df1$MVNET75E      ## net migration for 75+
 y1 = df1$MVIN75E
 y1 = df1$MVOUT75E
 y1 = df1$MVIN60E
 y1 = df1$MVOUT60E 
-
-
 
 
 df1 <- df1 %>%
@@ -64,14 +62,9 @@ summary(model)
 
 model$coef
 
-
-
 df1 <- df1 %>%
   mutate(color1 = case_when(df1$var1 >= 0 ~ "olivedrab4",
                               df1$var1 < 0 ~ "orange2"))
-
-
-
 
 threshold1 <- 1500  ## applied to variance
 ## 1500 for States/75/1YR
