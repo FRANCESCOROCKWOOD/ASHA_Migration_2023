@@ -112,8 +112,10 @@ df1 <- df1 %>%
   mutate (POP75PLUS = (POPM75E+POPM80E+POPM85E+POPF75E+POPF80E+POPF85E)) %>%
   mutate (TOTMVIN = MVINE + MVINABROADE) %>%
   mutate (TOT75MVIN = MVIN75E + MVINABROAD75E) %>%
-  mutate (TOT60_70MVIN = MVIN60_70E + MVINABROAD60E+MVINABROAD65E)
-
+  mutate (TOT60_70MVIN = MVIN60_70E + MVINABROAD60E+MVINABROAD65E) %>%
+  mutate (MVIN45_60E = MVIN45E + MVIN50E + MVIN55E) %>%
+  mutate (MVOUT45_60E = MVOUT45E + MVOUT50E + MVOUT55E) %>%
+  mutate (MVNET45_60E = MVIN45_60E - MVOUT45_60E) 
 
 
 state_outline <- get_acs(
@@ -131,7 +133,6 @@ state_outline <- state_outline %>%
   filter(!str_detect(NAME, "Puerto Rico")) 
 
 
-
 ## Appendix A (or B) ##
 
 write_xlsx((df1 %>% select(
@@ -143,17 +144,16 @@ write_xlsx((df1 %>% select(
   "MVINE",
   "MVOUTE",
 )),
-"processed_data/AppxA_.xlsx")
+"processed_data/AppxB_.xlsx")  ## Appx A or Appx B ##
 
 
 ## Check by Age Profile ##
 
 write_xlsx((df1 %>% select(
   "NAME",
-  "TOTPOPE",
-  "POP75_85",
-  "POP85PLUS"
-
+  "MVOUTE",
+  "MVOUT60_70E",
+  "MVOUT75E"
 )),
 "processed_data/Check_.xlsx")
 
