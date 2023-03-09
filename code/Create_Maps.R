@@ -79,7 +79,7 @@ limit1 <- max(abs(df1$estimate)) * c(-1, 1) ## for net figures
 ## df1 <- df1 %>%
 ## filter(estimate >= -4000)
 
-ggplot() +
+figure15 <- ggplot() +
   geom_sf(data=df1, aes(fill= estimate)) +
   geom_sf(data=state_outline, fill=NA, color="sienna4") +
   scale_fill_distiller(palette = palette1, 
@@ -93,6 +93,17 @@ ggplot() +
        caption = caption1,
        fill = fill1) + 
   theme_void()
+
+figure15
+
+
+ggsave("figure15.pdf")
+ggsave("figure15.png")
+ggsave("figure15.eps")
+
+install.packages("svglite")
+ggsave("figure15.svg")
+
 
 
 
