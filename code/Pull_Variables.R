@@ -133,6 +133,37 @@ state_outline <- state_outline %>%
   filter(!str_detect(NAME, "Puerto Rico")) 
 
 
+
+
+
+##########################################
+#### Pull Flow Data ######################
+##########################################
+
+
+geo2 <- 35620  ## "New York-Newark-Jersey City, NY-NJ-PA Metro Area"
+
+Flow <-get_flows(
+  geography = "metropolitan statistical area",
+  breakdown = "AGE",
+  msa = geo2,
+  breakdown_labels = TRUE,
+  output = "wide",
+  year = 2015
+) %>%
+  filter (AGE_label== "75 year and over") 
+
+
+
+write_xlsx(Flow, "processed_data/Flow.xlsx")
+
+
+
+
+##########################################
+#### Write Variables #####################
+##########################################
+
 ## Appendix A (or B) ##
 
 write_xlsx((df1 %>% select(
@@ -159,24 +190,19 @@ write_xlsx((df1 %>% select(
 
 
 
-##########################################
-#### Pull Flow Data ######################
-##########################################
+## Save Figures
+
+figure14
 
 
-geo2 <- 35620  ## "New York-Newark-Jersey City, NY-NJ-PA Metro Area"
+install.packages("Cairo")
+install.packages("svglite")
 
-Flow <-get_flows(
-  geography = "metropolitan statistical area",
-  breakdown = "AGE",
-  msa = geo2,
-  breakdown_labels = TRUE,
-  output = "wide",
-  year = 2015
-) %>%
-  filter (AGE_label== "75 year and over") 
+ggsave("figure14.pdf")
+##ggsave("figure15.png")
+##ggsave("figure15.svg")
+ggsave("figure14.eps", device=cairo_ps, fallback_resolution = 600) ## preferred format
 
 
 
-write_xlsx(Flow, "processed_data/Flow.xlsx")
 

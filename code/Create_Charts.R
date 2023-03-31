@@ -38,6 +38,7 @@ df1chart <- df1 %>%
 plot(df1chart) 
 
 
+
 ## Move Outs Chart 
 ## Chart_MoveOut_[geography]_[age]_[survey]
 ## Example: "Chart_MoveOut_State_75_1Yr"
@@ -80,7 +81,7 @@ df1$moe <- df1$MVNET60_70M
 df1$moe <- df1$MVNET75M
 
 df1chart <- df1 %>%
-  slice_max(estimate, n = 15) %>%
+  slice_min(estimate, n = 10) %>%  ## slice_max or slice_min
   select(NAME, estimate, moe) %>%
   ggplot(aes(y = reorder(NAME, estimate), x = estimate)) + 
   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe))+
@@ -93,6 +94,9 @@ df1chart <- df1 %>%
        x = x_label1, 
        caption = caption1) 
 plot(df1chart)
+
+figure05<-df1chart
+figure06<-df1chart
 
 
 ## International Move In Chart 

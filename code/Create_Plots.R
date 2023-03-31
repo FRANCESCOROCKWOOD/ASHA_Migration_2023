@@ -21,7 +21,7 @@ title1 <- "Moving In from Different CBSA"
 title1 <- "Moving Out to Different CBSA"
 
 
-subtitle2 <- "75+ v. All Ages | 2016-2020"
+subtitle2 <- "75+ v. All Ages | 2016-2020" ## most current CBSA
 subtitle2 <- "60-70 v. All Ages | 2016-2020"
 subtitle2 <- "75+ v. All Ages | 2015-2019"
 subtitle2 <- "60-70 v. All Ages | 2015-2019"
@@ -36,7 +36,7 @@ y_label2 <- "Ages 75+"
 
 
 x1 = df1$MVNETE  ## net migration for all ages
-x1 = df1$MVINE   ## in-migratrion for all ages
+x1 = df1$MVINE   ## in-migration for all ages
 x1 = df1$MVOUTE  ## out-migration for all ages
 
 y1 = df1$MVNET60_70E
@@ -82,7 +82,7 @@ threshold2 <- 3000  ## applied to net migration value
 ##  1800 for CBSA/75
 ##  5000 for CBSA/65
 
-ggplot(df1, aes(x = x1, y = y1)) +
+plot1 <- ggplot(df1, aes(x = x1, y = y1)) +
   annotate("rect", xmin = Inf, xmax = 0, ymin = Inf, ymax = 0, fill= "seagreen4", alpha=0.2)+ 
   annotate("rect", xmin = -Inf, xmax = 0, ymin = -Inf, ymax = 0 , fill= "firebrick1", alpha=0.1) + 
   annotate("rect", xmin = 0, xmax = Inf, ymin = 0, ymax = -Inf, fill= "grey", alpha =0.1) + 
@@ -108,6 +108,7 @@ ggplot(df1, aes(x = x1, y = y1)) +
   labs(title=title1,subtitle=subtitle2,x=x_label2,  
        y=y_label2, caption=caption1)
 
+plot1
 
 
 ### Q1 - Upper right quadrant ##
@@ -119,7 +120,7 @@ threshold1 <- 250
 threshold2 <- 0
 
 
-## Filters for Upper Right Quadrant
+## Filters for Upper Right Quadrant (Figure 11)
 df2 <- df1
 df2 <- filter(df1, df1$x1>0)
 df2 <- filter(df2, df2$y1>0)
@@ -127,27 +128,23 @@ df2 <- filter(df2, df2$x1<100000)
 fitline_limit1 <- 100000
 
 
-## Filters for Lower Left Quadrant
+## Filters for Lower Left Quadrant (Figure 12)
 df2 <- df1
 df2 <- filter(df1, df1$x1<0)
 df2 <- filter(df2, df2$y1<0)
 df2 <- filter(df2, df2$x1>-100000)
 
-## Filters for Lower Right Quadrant
-df2 <- df1
-df2 <- filter(df1, df1$x1>0)
-df2 <- filter(df2, df2$y1<0)
-
-
-## Filters for Upper Left Quadrant
+## Filters for Upper Left Quadrant (Figure 13)
 df2 <- df1
 df2 <- filter(df1, df1$x1<0)
 df2 <- filter(df2, df2$y1>0)
 
+## Filters for Lower Right Quadrant (Figure 14)
+df2 <- df1
+df2 <- filter(df1, df1$x1>0)
+df2 <- filter(df2, df2$y1<0)
 
-
-
-ggplot(df2, aes(x = x1, y = y1)) +
+plot1 <- ggplot(df2, aes(x = x1, y = y1)) +
   annotate("rect", xmin = Inf, xmax = 0, ymin = Inf, ymax = 0, fill= "seagreen4", alpha=0.2)+ 
   annotate("rect", xmin = -Inf, xmax = 0, ymin = -Inf, ymax = 0 , fill= "firebrick1", alpha=0.1) + 
   annotate("rect", xmin = 0, xmax = Inf, ymin = 0, ymax = -Inf, fill= "grey", alpha =0.1) + 
@@ -169,6 +166,8 @@ ggplot(df2, aes(x = x1, y = y1)) +
   geom_abline(intercept = model$coef[1], slope= model$coef[2], color="grey", 
                    linetype="solid", size=0.5)
 
+plot1
+figure14 <-plot1
 
 
 
