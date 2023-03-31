@@ -7,8 +7,7 @@ subtitle1 <- "2015-2019 5-Year ACS Estimates"  ## for states pre-pandemic
 subtitle1 <- "2016-2020 5-Year ACS Estimates" ## for CBSA
 
 
-
-fill1 <- "ACS Estimate"
+fill1 <- "ACS Estimate  "
 
 ## Maps - Total Population  
 ## Map_POP_[geography]_[age]_[survey]
@@ -16,6 +15,10 @@ fill1 <- "ACS Estimate"
 
 title1 <- "Population by State | All Ages"
 title1 <- "Population by CBSA | All Ages"
+
+
+
+## Maps: Total Population 
 
 df1$estimate <- df1$TOTPOPE
 df1$moe <- df1$TOTPOPM
@@ -79,7 +82,7 @@ limit1 <- max(abs(df1$estimate)) * c(-1, 1) ## for net figures
 ## df1 <- df1 %>%
 ## filter(estimate >= -4000)
 
-figure15 <- ggplot() +
+map1 <- ggplot() +
   geom_sf(data=df1, aes(fill= estimate)) +
   geom_sf(data=state_outline, fill=NA, color="sienna4") +
   scale_fill_distiller(palette = palette1, 
@@ -94,15 +97,10 @@ figure15 <- ggplot() +
        fill = fill1) + 
   theme_void()
 
-figure15
+map1
+figure09<-map1
+figure09
 
-
-ggsave("figure15.pdf")
-ggsave("figure15.png")
-ggsave("figure15.eps")
-
-install.packages("svglite")
-ggsave("figure15.svg")
 
 
 
